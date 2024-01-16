@@ -1,0 +1,51 @@
+plugins {
+    id "idea"
+    id "java"
+    id "io.freefair.lombok" version "8.4"
+}
+
+/*
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+ */
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+group = "com.epicgames.experiments"
+version = "1.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+def versions = [
+        ScalaBinary: "2.13"
+]
+
+dependencies {
+    implementation platform("org.apache.pekko:pekko-bom_${versions.ScalaBinary}:1.0.2")
+    implementation "org.apache.pekko:pekko-actor-typed_${versions.ScalaBinary}"
+
+    implementation "ch.qos.logback:logback-classic:1.4.14"
+
+    testImplementation "org.apache.pekko:pekko-actor-testkit-typed_${versions.ScalaBinary}"
+
+    testImplementation platform("org.junit:junit-bom:5.9.1")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+
+    // TODO(ef): Pekko will support JUnit 5 in 1.1.0. Until then, use JUnit 4.
+    testImplementation "junit:junit:4.13.2"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
+}
+
+test {
+    useJUnitPlatform()
+}
